@@ -6,10 +6,9 @@ public class Cadete
 {
     public int id { get; set; }
     public string nombre { get; set; }
-    public string direccionCadete { get; private set; }
-    public int telefono { get; private set; }
-
-    private List<Pedido> pedidosAsignados { get; set; } = new List<Pedido>();
+    public string direccionCadete { get; set; }
+    public int telefono { get;  set; }
+    
 
     public Cadete(int id, string nombre, string direccionCadete, int telefono)
     {
@@ -19,40 +18,8 @@ public class Cadete
         this.telefono = telefono;
     }
 
-    // Agrega un pedido a la lista de pedidos asignados
-    public void AgregarPedido(Pedido pedido)
-    {
-        if (!pedidosAsignados.Contains(pedido))
-        {
-            pedidosAsignados.Add(pedido);
-        }
+    public void infoCadete(){
+        Console.WriteLine($"Nombre:{nombre} ID: {id}");
     }
-
-    // Elimina un pedido de la lista de pedidos asignados
-    public void RemoverPedido(int numeroPedido)
-    {
-        var pedido = pedidosAsignados.FirstOrDefault(p => p.numeroPedido == numeroPedido);
-        if (pedido != null)
-        {
-            pedidosAsignados.Remove(pedido);
-        }
-    }
-
-    // Verifica si el cadete tiene un pedido específico
-    public bool HasPedido(int numeroPedido)
-    {
-        return pedidosAsignados.Any(p => p.numeroPedido == numeroPedido);
-    }
-
-    // Cuenta la cantidad de pedidos entregados
-    public int GetPedidosEntregados()
-    {
-        return pedidosAsignados.Count(p => p.Estado == EstadoPedido.Entregado);
-    }
-
-    // Método para mostrar información del cadete
-    public override string ToString()
-    {
-        return $"ID: {id}, Nombre: {nombre}, Teléfono: {telefono}";
-    }
+    
 }

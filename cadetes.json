@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "nombre": "Thomas",
+      "direccionCadete": "Leales",
+      "telefono": 38199
+    },
+    {
+      "id": 2,
+      "nombre": "Lisandro",
+      "direccionCadete": "Lomas",
+      "telefono": 38153
+    },
+    {
+      "id": 3,
+      "nombre": "Balthazarr",
+      "direccionCadete": "Lomas",
+      "telefono": 3812
+    }
+  ]

@@ -1,5 +1,6 @@
 namespace pedidos;
 using cliente;
+using cadete;
 public enum EstadoPedido
 {
     Pendiente = 0,
@@ -8,10 +9,13 @@ public enum EstadoPedido
 }
 public class Pedido{
     public int numeroPedido{get; set;}
-    private string observaciones{get; set;}
+    private string observaciones{get; set;} = "";
 
     private  Cliente cliente;
     public EstadoPedido Estado { get; set; }
+
+    public Cadete cadeteAsignado{get; set;}
+    
     
     
     
@@ -22,16 +26,18 @@ public class Pedido{
         Estado = EstadoPedido.Pendiente;
         this.observaciones = observaciones;
         
+        
     }
 
     public void verDireccionCliente(){
         Console.WriteLine("La direccion del cliente es: " + cliente.Direccion);
         
     }
-    public void verDatosCliente(){
-        Console.WriteLine("Nombre del cliente: " + cliente.Nombre + "Telefono del cliente: " + cliente.Telefono);
+    public void verDatosPedido(){
+        Console.WriteLine("Numero Pedido:" + numeroPedido + "Nombre del cliente: " + cliente.Nombre + "Telefono del cliente: " + cliente.Telefono);
 
     }
+    
 
 
 }
