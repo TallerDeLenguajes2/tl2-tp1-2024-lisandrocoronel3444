@@ -33,7 +33,6 @@ envíos promedio por cadete
 
 
 
-
 Refactorización del Sistema para una Cadeteria
 El cliente presentó como nuevo requisito que los pedidos puedan no estar asignados a
 algún cadete. Esto evidenció una falla en el diseño de clases del sistema, por lo que se decidió
@@ -62,7 +61,8 @@ Modifique la interfaz de usuario para que al inicio del sistema se pida que tipo
 
 string direccionCadeteria;
 string direccionCadete;
-Cadeteria nuevaCadeteria = null;
+Cadeteria nuevaCadeteria;
+manejarPedidos pedidosManejo = new manejarPedidos();
 
 while (true)
 {
@@ -114,7 +114,7 @@ while (true)
     switch (opcion)
     {
         case "1":
-            Pedido nuevoPedido = CrearPedido();
+            Pedido nuevoPedido = pedidosManejo.CrearPedido();
             nuevaCadeteria.todosLosPedidos.Add(nuevoPedido);
             Console.WriteLine("Pedido creado exitosamente.");
             break;
@@ -122,7 +122,7 @@ while (true)
             nuevaCadeteria.AsignarCadeteAPedido();
             break;
         case "3":
-            CambiarEstadoPedido(nuevaCadeteria.todosLosPedidos);
+            pedidosManejo.CambiarEstadoPedido(nuevaCadeteria.todosLosPedidos);
             break;
         case "4":
             nuevaCadeteria.ReasignarPedido();
@@ -145,79 +145,4 @@ while (true)
 }
 
 
-static Pedido CrearPedido()
-{
-    Console.WriteLine("Ingrese el número del pedido:");
-    int numeroPedido;
-    Int32.TryParse(Console.ReadLine(), out numeroPedido);
 
-    Console.WriteLine("Ingrese las observaciones del pedido:");
-    string observaciones = Console.ReadLine();
-
-    Console.WriteLine("Ingrese el nombre del cliente:");
-    string nombreCliente = Console.ReadLine();
-
-    Console.WriteLine("Ingrese la dirección del cliente:");
-    string direccionCliente = Console.ReadLine();
-
-    Console.WriteLine("Ingrese el teléfono del cliente:");
-    int telefonoCliente;
-    Int32.TryParse(Console.ReadLine(), out telefonoCliente);
-
-    // Crear un nuevo pedido
-    return new Pedido(numeroPedido, observaciones, nombreCliente, direccionCliente, telefonoCliente);
-}
-
-static void CambiarEstadoPedido(List<Pedido> pedidosLista)
-{
-    Console.WriteLine("Seleccione el número del pedido cuyo estado desea cambiar:");
-
-    // Mostrar los pedidos disponibles
-    foreach (var pedido in pedidosLista)
-    {
-        Console.WriteLine($"Número de pedido: {pedido.numeroPedido} - Estado: {pedido.Estado}");
-    }
-
-    // Leer el número de pedido del usuario
-    int numeroPedido;
-    if (!Int32.TryParse(Console.ReadLine(), out numeroPedido))
-    {
-        Console.WriteLine("Número de pedido inválido.");
-        return;
-    }
-
-    // Buscar el pedido seleccionado
-    Pedido pedidoSeleccionado = null;
-    foreach (var pedido in pedidosLista)
-    {
-        if (pedido.numeroPedido == numeroPedido)
-        {
-            pedidoSeleccionado = pedido;
-            break;
-        }
-    }
-
-    if (pedidoSeleccionado == null)
-    {
-        Console.WriteLine("Pedido no encontrado.");
-        return;
-    }
-
-    // Mostrar opciones para el nuevo estado
-    Console.WriteLine("Seleccione el nuevo estado del pedido:");
-    Console.WriteLine("1. Pendiente");
-    Console.WriteLine("2. En Proceso");
-    Console.WriteLine("3. Entregado");
-
-    int nuevaOpcionEstado;
-    if (!Int32.TryParse(Console.ReadLine(), out nuevaOpcionEstado) || nuevaOpcionEstado < 1 || nuevaOpcionEstado > 3)
-    {
-        Console.WriteLine("Opción de estado inválida.");
-        return;
-    }
-
-    // Asignar el nuevo estado al pedido
-    pedidoSeleccionado.Estado = (EstadoPedido)(nuevaOpcionEstado - 1);
-
-    Console.WriteLine("Estado del pedido actualizado exitosamente.");
-}
