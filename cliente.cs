@@ -1,25 +1,20 @@
-using System.Dynamic;
-
 namespace cliente;
 
 public class Cliente
 {
-    private string nombre;
+    // Propiedades de acceso público para facilitar la serialización en APIs web
+    public string Nombre { get; set; }
+    public string Direccion { get; set; }
+    public int Telefono { get; set; }
 
-
-    private string direccion;
-
-    private int telefono;
-
-    public string Nombre { get => nombre; }
-    public string Direccion { get => direccion;  }
-    public int Telefono { get => telefono;  }
-
-
+    // Constructor
     public Cliente(string nombre, string direccion, int telefono)
     {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
+        this.Nombre = nombre;
+        this.Direccion = direccion;
+        this.Telefono = telefono;
     }
+
+    // Constructor vacío para facilitar la deserialización automática en JSON si es necesario
+    
 }

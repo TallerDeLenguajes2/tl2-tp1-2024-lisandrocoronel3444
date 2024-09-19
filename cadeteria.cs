@@ -1,6 +1,8 @@
 namespace cadeteria;
 using cadete;
 using pedidos;
+    using System.Linq;
+    using System.Collections.Generic;
 
 public class Cadeteria
 {
@@ -15,86 +17,65 @@ public class Cadeteria
         this.nombre = nombre;
         this.telefono = telefono;
     }
+    public Cadeteria(){}
 
-    public void JornalACobrar(int idCadete)
+    public string JornalACobrar(int idCadete)
     {
         int cantEnvios = todosLosPedidos
-            .Where(pedido => pedido.cadeteAsignado?.id == idCadete && pedido.Estado == EstadoPedido.Entregado)
-            .Count();
+                .Where(pedido => pedido.cadeteAsignado?.id == idCadete && pedido.Estado == EstadoPedido.Entregado)
+                .Count();
 
-        var cadete = listaCadetes.FirstOrDefault(c => c.id == idCadete);
-        if (cadete != null)
-        {
-            Console.WriteLine($"El jornal a cobrar de {cadete.nombre} es de {500 * cantEnvios}");
-        }
-    }
-
-    public void AsignarCadeteAPedido()
-    {
-        Console.WriteLine("Ingrese la ID del cadete:");
-        InfoTodosCadetes();
-        if (int.TryParse(Console.ReadLine(), out int cadeteID))
-        {
-            Console.WriteLine("Ingrese el número del pedido a asignar:");
-            InfoTodosPedidos();
-            if (int.TryParse(Console.ReadLine(), out int numPedido))
+            var cadete = listaCadetes.FirstOrDefault(c => c.id == idCadete);
+            if (cadete != null)
             {
-                var cadete = listaCadetes.FirstOrDefault(c => c.id == cadeteID);
-                var pedido = todosLosPedidos.FirstOrDefault(p => p.numeroPedido == numPedido);
-                if (cadete != null && pedido != null)
-                {
-                    pedido.cadeteAsignado = cadete;
-                    pedido.Estado = EstadoPedido.Entregado;
-                }
+                return $"El jornal a cobrar de {cadete.nombre} es de {500 * cantEnvios}";
             }
-        }
+
+            return "Cadete no encontrado";
     }
 
-    public void RemoverCadeteDePedido()
-    {
-        Console.WriteLine("Ingrese el número del pedido para remover el cadete:");
-        InfoTodosPedidos();
-        if (int.TryParse(Console.ReadLine(), out int numPedido))
+    public string AsignarCadeteAPedido(int cadeteID, int numPedido)
         {
+            var cadete = listaCadetes.FirstOrDefault(c => c.id == cadeteID);
             var pedido = todosLosPedidos.FirstOrDefault(p => p.numeroPedido == numPedido);
+            if (cadete != null && pedido != null)
+            {
+                pedido.cadeteAsignado = cadete;
+                pedido.Estado = EstadoPedido.Entregado;
+                return $"Cadete {cadete.nombre} asignado al pedido {numPedido}";
+            }
+
+            return "Cadete o pedido no encontrado";
+        }
+
+    public string RemoverCadeteDePedido(int numPedido)
+    {
+         var pedido = todosLosPedidos.FirstOrDefault(p => p.numeroPedido == numPedido);
             if (pedido != null && pedido.cadeteAsignado != null)
             {
-                Console.WriteLine($"Cadete {pedido.cadeteAsignado.nombre} removido del pedido {pedido.numeroPedido}.");
+                string nombreCadete = pedido.cadeteAsignado.nombre;
                 pedido.cadeteAsignado = null;
                 pedido.Estado = EstadoPedido.Pendiente;
+                return $"Cadete {nombreCadete} removido del pedido {numPedido}.";
             }
-            else
-            {
-                Console.WriteLine("Este pedido no tiene un cadete asignado.");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Número de pedido inválido.");
-        }
+
+            return "El pedido no tiene un cadete asignado o no existe.";
     }
 
-    public void InfoTodosCadetes()
-    {
-        Console.WriteLine("-----Lista de Cadetes-----");
-        foreach (var cadete in listaCadetes)
+    public List<string> InfoTodosCadetes()
         {
-            cadete.infoCadete();
+            return listaCadetes.Select(cadete => cadete.ObtenerInfoCadete()).ToList();
         }
-    }
 
-    public void InfoTodosPedidos()
-    {
-        Console.WriteLine("-----Lista de Pedidos-----");
-        foreach (var pedido in todosLosPedidos)
+   public List<string> InfoTodosPedidos()
         {
-            pedido.verDatosPedido();
+            return todosLosPedidos.Select(pedido => pedido.ObtenerDatosPedido()).ToList();
         }
-    }
 
-    public void ReasignarPedido()
-    {
-        RemoverCadeteDePedido();
-        AsignarCadeteAPedido();
-    }
+     public string ReasignarPedido(int numPedido, int nuevoCadeteID)
+        {
+            string removerResultado = RemoverCadeteDePedido(numPedido);
+            string asignarResultado = AsignarCadeteAPedido(nuevoCadeteID, numPedido);
+            return $"{removerResultado} {asignarResultado}";
+        }
 }
