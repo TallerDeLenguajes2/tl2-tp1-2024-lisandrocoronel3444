@@ -9,8 +9,7 @@ public class Cadeteria
 
     public List<Cadete> listaCadetes { get; set; } = new List<Cadete>();
     public List<Pedido> todosLosPedidos { get; set; } = new List<Pedido>();
-    public Cadeteria() { }
-
+    
     public Cadeteria(string nombre, int telefono)
     {
         this.nombre = nombre;
